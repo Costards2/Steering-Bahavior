@@ -1,4 +1,4 @@
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
 using UnityEngine;
 
 enum Behavior { Idle, Seek, Evade }
@@ -15,6 +15,10 @@ public class SteeringActor : MonoBehaviour
     [SerializeField] float arriveRadius = 1.2f;
     [SerializeField] float stopRadius = 0.5f;
     [SerializeField] float evadeRadius = 5f;
+    [SerializeField] float avoidDistance = 2f;
+    [SerializeField] float contourDistance = 2f;
+    [SerializeField] float contourAngleStep = 10f;
+    [SerializeField] LayerMask wallLayer;
 
     Text behaviorDisplay = null;
     Rigidbody2D physics;
@@ -34,12 +38,15 @@ public class SteeringActor : MonoBehaviour
 
         physics.velocity = Vector2.ClampMagnitude(physics.velocity, maxSpeed);
 
-        behaviorDisplay.text = state.ToString().ToUpper();
+        if (behaviorDisplay != null)
+        {
+            behaviorDisplay.text = state.ToString().ToUpper();
+        }
     }
 
     void IdleBehavior()
     {
-        physics.velocity = physics.velocity * decelerationFactor;
+        physics.velocity *= decelerationFactor;
     }
 
     void SeekBehavior()
@@ -74,6 +81,9 @@ public class SteeringActor : MonoBehaviour
                 physics.velocity += steering * Time.fixedDeltaTime;
                 break;
         }
+
+        // Chamada do método para contornar paredes
+        ContourWalls();
     }
 
     void EvadeBehavior()
@@ -100,12 +110,48 @@ public class SteeringActor : MonoBehaviour
                 physics.velocity -= steering * Time.fixedDeltaTime;
                 break;
         }
+
+        // Chamada do método para contornar paredes
+        ContourWalls();
+    }
+
+    void ContourWalls()
+    {
+        // Direção de movimento atual
+        Vector2 moveDirection = physics.velocity.normalized;
+
+        // Direções de contorno
+        Vector2 rightContour = Quaternion.AngleAxis(-contourAngleStep, Vector3.forward) * moveDirection;
+        Vector2 leftContour = Quaternion.AngleAxis(contourAngleStep, Vector3.forward) * moveDirection;
+
+        // Raycasts para detectar paredes nas direções de contorno
+        RaycastHit2D hitRight = Physics2D.Raycast(transform.position, rightContour, contourDistance, wallLayer);
+        RaycastHit2D hitLeft = Physics2D.Raycast(transform.position, leftContour, contourDistance, wallLayer);
+
+        if (hitRight.collider != null && hitLeft.collider != null)
+        {
+            // Ambas as direções estão bloqueadas
+            // Escolher a melhor direção possível (podemos adicionar lógica mais sofisticada aqui)
+            Vector2 directionAway = (hitRight.point - hitLeft.point).normalized;
+            physics.velocity = directionAway * maxSpeed;
+        }
+        else if (hitRight.collider != null)
+        {
+            // Direção de contorno direita está bloqueada
+            physics.velocity = leftContour.normalized * maxSpeed;
+        }
+        else if (hitLeft.collider != null)
+        {
+            // Direção de contorno esquerda está bloqueada
+            physics.velocity = rightContour.normalized * maxSpeed;
+        }
+        // Se ambas as direções de contorno estiverem livres, o agente continua na direção atual
     }
 
     void Awake()
     {
         physics = GetComponent<Rigidbody2D>();
-        physics.isKinematic = true;
+        physics.isKinematic = false;  // Set isKinematic to false to enable physics-based collision
         behaviorDisplay = GetComponentInChildren<Text>();
     }
 

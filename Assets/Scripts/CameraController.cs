@@ -33,7 +33,7 @@ public class CameraController : MonoBehaviour
         var cameraSize = Mathf.Max(bounds.size.x, bounds.size.y) / 2;
 
         transform.position = Vector3.Lerp(transform.position, center, smoothFactor);
-        cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, cameraSize, smoothFactor);
+        //am.orthographicSize = Mathf.Lerp(cam.orthographicSize, cameraSize, smoothFactor);
     }
 
     void Start()
