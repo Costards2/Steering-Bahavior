@@ -9,4 +9,5 @@ qualquer em uma cena deste Jogo Digital um novo comportamento. Sugestões:
  *Cohesion
  *WallAvoid
 
-A escolhida por min foi o WallAvoid
+A escolhida por min foi o WallAvoid, além disso mudei a forma de movimentação para as teclas
+"WASD" do teclado ao inves do mouse (O wallavoid vem junto com o Pursuit)
