@@ -10,7 +10,7 @@ public class SteeringActor : MonoBehaviour
     [Header("Settings")]
     [SerializeField] Behavior behavior = Behavior.Seek;
     [SerializeField] Transform target = null;
-    [SerializeField] float maxSpeed = 4f;
+    [SerializeField] float maxSpeed = 5f;
     [SerializeField, Range(0.1f, 0.99f)] float decelerationFactor = 0.75f;
     [SerializeField] float arriveRadius = 1.2f;
     [SerializeField] float stopRadius = 0.5f;
@@ -24,7 +24,7 @@ public class SteeringActor : MonoBehaviour
     Rigidbody2D physics;
     State state = State.Idle;
 
-    void FixedUpdate()
+    void Update()
     {
         if (target != null)
         {
