@@ -82,7 +82,6 @@ public class SteeringActor : MonoBehaviour
                 break;
         }
 
-        // Chamada do método para contornar paredes
         ContourWalls();
     }
 
@@ -111,47 +110,38 @@ public class SteeringActor : MonoBehaviour
                 break;
         }
 
-        // Chamada do método para contornar paredes
         ContourWalls();
     }
 
     void ContourWalls()
     {
-        // Direção de movimento atual
         Vector2 moveDirection = physics.velocity.normalized;
 
-        // Direções de contorno
         Vector2 rightContour = Quaternion.AngleAxis(-contourAngleStep, Vector3.forward) * moveDirection;
         Vector2 leftContour = Quaternion.AngleAxis(contourAngleStep, Vector3.forward) * moveDirection;
 
-        // Raycasts para detectar paredes nas direções de contorno
         RaycastHit2D hitRight = Physics2D.Raycast(transform.position, rightContour, contourDistance, wallLayer);
         RaycastHit2D hitLeft = Physics2D.Raycast(transform.position, leftContour, contourDistance, wallLayer);
 
         if (hitRight.collider != null && hitLeft.collider != null)
         {
-            // Ambas as direções estão bloqueadas
-            // Escolher a melhor direção possível (podemos adicionar lógica mais sofisticada aqui)
             Vector2 directionAway = (hitRight.point - hitLeft.point).normalized;
             physics.velocity = directionAway * maxSpeed;
         }
         else if (hitRight.collider != null)
         {
-            // Direção de contorno direita está bloqueada
             physics.velocity = leftContour.normalized * maxSpeed;
         }
         else if (hitLeft.collider != null)
         {
-            // Direção de contorno esquerda está bloqueada
             physics.velocity = rightContour.normalized * maxSpeed;
         }
-        // Se ambas as direções de contorno estiverem livres, o agente continua na direção atual
     }
 
     void Awake()
     {
         physics = GetComponent<Rigidbody2D>();
-        physics.isKinematic = false;  // Set isKinematic to false to enable physics-based collision
+        physics.isKinematic = false; 
         behaviorDisplay = GetComponentInChildren<Text>();
     }
 
