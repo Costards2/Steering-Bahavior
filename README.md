@@ -4,6 +4,7 @@ navegar para um destino e/ou objetivo, através de um ambiente que inclua objeto
 
 1. A proposta da continuação desta prática é a partir do modelo construído, aplica-lo a um personagem
 qualquer em uma cena deste Jogo Digital um novo comportamento. Sugestões:
+
  *Flee
 
  *Pursuit
