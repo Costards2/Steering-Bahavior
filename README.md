@@ -3,7 +3,9 @@ mundos virtuais estes comportamentos são as conduções das habilidades de um p
 navegar para um destino e/ou objetivo, através de um ambiente que inclua objetos estáticos e/ou dinâmicos.
 
 1. A proposta da continuação desta prática é a partir do modelo construído, aplica-lo a um personagem
-qualquer em uma cena deste Jogo Digital um novo comportamento. Sugestões:
+qualquer em uma cena deste Jogo Digital um novo comportamento.
+
+Sugestões:
 
  *Flee
 
